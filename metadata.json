@@ -1,0 +1,5 @@
+{
+  "name": "PhishNet",
+  "description": "A high-fidelity, AI-powered cybersecurity simulation game. Train against dynamic social engineering attacks using Gemini-generated scenarios and real-time RAG assistance.",
+  "requestFramePermissions": []
+}
