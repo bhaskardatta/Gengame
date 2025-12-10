@@ -28,6 +28,7 @@ export default function Scene() {
     return (
         <>
             <Canvas
+                id="canvas-container"
                 shadows
                 camera={{ fov: 60 }}
                 className="bg-black"
@@ -70,18 +71,8 @@ export default function Scene() {
                 </div>
             )}
 
-            {/* Exit Button - High Contrast */}
-            {isSitting && (
-                <div className="absolute top-6 right-6 z-50">
-                    <button
-                        className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded shadow-[0_0_20px_rgba(220,38,38,0.5)] border border-red-400 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2"
-                        onClick={() => useGameStore.getState().setIsSitting(false)}
-                    >
-                        <span>STAND UP</span>
-                        <span className="text-xs opacity-75 bg-red-800 px-1.5 py-0.5 rounded">ESC</span>
-                    </button>
-                </div>
-            )}
+            {/* Exit Button - REMOVED (Handled in page.tsx) */}
+            {isSitting && null}
         </>
     );
 }

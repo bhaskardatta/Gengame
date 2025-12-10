@@ -1,0 +1,531 @@
+﻿
+
+
+
+
+
+
+COMPUTER SCIENCE AND ENGINEERING
+DEPARTMENT OF
+(CYBER SECURITY)
+
+
+
+Course Code: CYL75
+GenAI Laboratory
+
+
+
+
+Project Title: “PhishNet” – An AI-Powered Social Engineering
+Simulation Game
+
+
+
+Literature Survey and Design/Methodology Report
+
+
+
+
+
+
+
+
+
+
+
+
+Name Bhaskar Datta Dhanush J Dushyanth S
+
+Team
+
+USN 1MS22CY014 1MS22CY021 1MS22CY025
+
+
+
+
+
+
+
+
+
+M.S. (Autonomous Institute, Affiliated to VTU)  GY
+RAMAIAH INSTITUTE OFTECHNOLO
+
+1. Literature Survey
+
+Paper 1 — Jain, A. K. et al. (2020). Phishing Detection Using Machine Learning Contributions & Techniques: Presents a feature-engineered approach to phishing email detection linguistic, sender reputation) and applied TF-IDF for text.
+using Random Forest, SVM and feedforward neural networks. Extracted 47 features (header, URL,
+Outcomes: Random Forest gave best results with 94.2% accuracy and low false positive rate
+(~2.1%). Strength: interpretability via feature importance. Limitation: relies on handcrafted features
+and struggles with novel linguistic obfuscations.
+
+
+Paper 2 — Chen, M. et al. (2021). Deep Learning for Phishing Email Detection Contributions & Techniques: Develops a hierarchical deep model (character → word → sentence)
+combining CNN and LSTM, uses Word2Vec embeddings and attention to capture obfuscation and
+context.
+
+Outcomes:Achieved ~96.8% accuracy, superior toiclassical: ML. Strength: captures sequential
+patterns and hidden syntax used in spear-phishing. L mitation  higher compute cost and data
+requirement.
+
+
+Paper 3 — Kumar, R. & Patel, S. (2019). Social Engineering Attack Simulation
+Framework
+
+templates across multiple attack types (phishing, pretexting, baiting). Tracks user responses and + to deploy. Limitation:ideterministic templates (predictable) and no real-time adaptivity. l and easy
+Contributions & Techniques: Rule-based scenario generator and training framework with 200
+decision times.
+Outcomes: User stud es showed ~35% improvement in recognition. Strength: practica
+Paper 4 — Zhang, L. et al. (2022). RAG-Based Cybersecurity Assistant for Threat
+Intelligence
+
+Contributions & Techniques: Retrieval-Augmented Generation combining a vector DB (Chroma-answers; improves analyst understanding. Limitation: requires curated KBrand API dependency.
+style) + LLM (GPT-3.5) for contextual threat answers; uses cross-encoder re-ranking.
+Outcomes: ~89% relevance accuracy, <2s average response. Strength: g ounded, citeable
+Paper 5 — Williams, A. & Thompson, B. (2020). Gamiﬁcation in Cybersecurity
+Education
+
+Contributions & Techniques: Studies gamiﬁed learning (points, badges, leaderboards) across 15 Outcomes: +28% engagement, +22% retention vs lecturing. Strength:. clear engagement uplift.
+modules for undergraduates. Measures engagement and retention across 12 weeks.
+Limitation: extrinsic rewards show diminishing returns after ~8 weeks
+Paper 6 — Lee, K. et al. (2023). LLM-Powered Conversational Agents for Security
+Training
+
+
+simulation with persistent persona and context management. Evaluates realism and engagement. scenarios. Strength: highly varied, natural dialogues. Limitation: operational costs and latency (API
+Contributions & Techniques: Uses GPT-4 style agents for multi-turn social engineering
+Outcomes: Users reported ~45% higher realism and ~38% higher engagement than scripted
+cost/response time).
+
+Paper 7 — Rodriguez, S. et al. (2021). Multi-Modal Phishing Detection Using
+NLP & Vision
+
+Contributions & Techniques: Late-fusion of BERT textual embeddings and ResNet-50 visual Outcomes: ~97.3% accuracy, outperforming text-only. Strength: detects visual spooﬁng (brand
+features; OCR for images; fusion classiﬁer.
+impersonation). Limitation: heavy model complexity and GPU needs.
+
+Paper 8 — Anderson, P. et al. (2022). Adaptive Learning Systems for
+Cybersecurity Training
+
+Contributions & Techniques: RL-based personalization—MAB for content selection and DQN
+for difﬁculty adaptation—using interaction signals.
+Outcomes: Users achieved competency ~32% faster and dropout reduced by 24%. Strength:
+
+
+personalized learning paths. Limitation: cold-start for new users and need for substantial interaction
+data.
+
+
+Paper 9 — Martinez, J. & Brown, A. (2020). Real-Time Phishing Detection Using
+Ensemble Methods
+
+meta-learner (XGBoost) and production-orientedroptimizations (feature caching, parallelization). production viability and low FPR. Limitation: multiple model maintenance overhead.
+Contributions & Techniques: Ensemble (RF, G adient Boosting, LR, SVM, NN) with stacking
+Outcomes: 95.7% accuracy, FPR ~1.2%, ~94 ms processing per email on CPU. Strength:
+Paper 10 — Wang, Y. et al. (2022). Knowledge Graph-Based Threat Intelligence
+System
+
+Contributions & Techniques: Builds Neo4j knowledge graph linking attacks, vulnerabilities,
+actors; uses NER and GNN inference.
+Outcomes: Retrieval improvement ~52% and faster query times; discovered hidden relations.
+
+
+Strength: rich semantic queries; Limitations: high construction effort and need for domain expertise.
+
+Paper 11 — Johnson, M. et al. (2021). Behavioral Analysis for Social Engineering
+Detection
+
+Contributionsi& Techniques:t Uses interaction telemetry (response times, mouse/keystrokeo
+dynamics) with Isolation Fores  and LSTM temporal models to detect anomalous responses t
+social engineer ng.
+Outcomes: Detected ~23% more social engineering cases vs content-only; FPR ~2.8%. Strength:
+content-agnostic detection. Limitation: privacy concerns and user discomfort.
+
+
+Paper 12 — Singh, R. & Chen, L. (2023). Federated Learning for Collaborative
+Phishing Detection
+
+Contributions & Techniques: Federated averaging across orgs, differential privacy (ε=1.0), secure Outcomes: 93.5% accuracy (1.2% lower than centralized) with improved cross-org generalization. synchronization complexity.
+aggregation to share gradients not raw emails.
+Strength: privacy-preserving collaboration. Limitation: communication overhead and
+Paper 13 — White, T. et al. (2022). Explainable AI for Phishing Detection
+
+LIME instance explanations and multi-level explainers (quick highlights, textual rationale). HAP/ transparency and actionable insight. Limitation: marginal performance drop and additional latency.
+Contributions & Techniques:Augments transformer models with attention visualization, S
+Outcomes: Maintains ~94.1% accuracy and improves analyst trust by ~41%. Strength:
+Paper 14 — Garcia, A. et al. (2021). Mobile-Based Phishing Awareness Training
+Platform
+
+Contributions & Techniques: Micro-learning mobile app with spaced repetition, push Outcomes: Higher module completion (3×) and +25% retention; DAU l78%→52% over 6 months.
+notiﬁcations, short interactive modules and mini-games.
+Strength: accessibility for Gen-Z. Limitation: engagement decays over  ong term.
+Paper 15 — Kim, H. & Park, S. (2023). Transformer-Based Email Classiﬁcation
+for Phishing Detection
+Contributions & Techniques: Fine-tuned RoBERTa-large and BERT on 100K emails; used perturbations. Strength: SOTA performance. Limitation: expensive training (A100, long runtimes). l
+augmentation (back-translation, synonym replacement), mixed precision and token scheduling.
+Outcomes: State-of-the-art: 98.1% accuracy, precision 97.9%, recall 98.3%; robust to adversaria
+Comparative Table
+
+Paper (Year)	Methods /	(type &	Metrics d) 1 (2020) al.           engineering, e    corpus, 50K  FPR 2.1% ,
+Dataset	Primary
+Models
+size)	(reporte
+RF, SVM,
+Jain et	ANN; featur	Email	Acc 94.2%
+TF-IDF
+Hierarchical
+
+2 Chen et al.	CNN + LSTM   80K labeled  Acc 96.8% Word2Vec
+(2021)	+ Attention;	emails
+200
+3 Kumar & Patel  Rule-based	templates;	+35%ness
+scenario
+simulation
+(150)
+(2019)	user study	aware
+
+4 Zhang et al.	RAG (vec DB   10K threat	Relevance
+~89%, <2s
+latency
+(2022)	+ GPT-3.5)	reports
+
+
+Williams &	Gamiﬁcation	500 students  engagement, (2020)	leaderboards)                           retention
++28%
+5 Thompson	(badges,
+(12 weeks)	+22%
+GPT-4	200	+45%
+
+6 Lee et al.	conversational   sessions,	realism, management	participants   engagement
+(2023)	agents, persona 100	+38%
+BERT +
+Rodriguez	ResNet-50	60K emails,
+
+7 al. (2021)  et	(late fusion) +   25K images   Acc 97.3%
+OCR
+
+Anderson et al. RL (MAB +	300 users (6  +32% faster
+8	DQN) for
+(2022)	months)	skill gain
+adaptivity
+Ensemble (RF,  70K emails
+9	GB, SVM,	(SMOTE
+Martinez &	Acc 95.7%,
+Brown (2020)   NN) + stacking balanced)	FPR 1.2% 10 Wang et al.	Knowledge N   nodes, 200K  retrievaly
+KG: 50K	+52%
+(2022)	Graph + GN
+relations	efﬁcienc
+Behavioral
+
+11 Johnson et al.	telemetry + rest interactions,  detections;
+100K	+23%
+(2021)	Isolation Fo
++ LSTM
+Federated	10 orgs	Acc 93.5%
+Learning + D	(5K–5	(near
+500 users	FPR 2.8%
+
+12 Singh & Chen   + secure agg P  each) 0K	centralized)
+(2023)
+
+
+
+
+
+
+Strengths	Limitations Interpretability;   Static importance          features
+Notable	Practical
+feature	handcrafted
+Good sequential/ Compute/data modeling
+context
+heavy
+
+training lent         templates, not grounded l           KB curation +
+Practica	Predictable
+deploym	adaptive
+Contextua
+answers &	API reliance
+citations
+Engagement	Diminishing motivation
+extrinsic
+boost
+
+Realistic multi-	API cost &
+turn attacks	latency
+
+
+
+Detects visual	Complex, usage
+high GPU
+impersonation
+Personalized	Cold start; interactions
+needs
+progression
+Low FPR; real-   Maintenance
+time capable	complexity
+
+
+Rich semantic	Heavy setup
+queries	& expertise
+
+
+
+Content-agnostic Privacy s
+detection	concern
+
+Privacy-
+Comm &
+preserving
+collaboration	sync overhead
+
+13 White et al.
+(2022)
+
+
+
+14 Garcia et al.
+(2021)
+
+
+
+15 Kim & Park
+(2023)
+
+BERT + SHAP,
+55K emails   +41% analyst
+Acc 94.1%;
+LIME,
+attention
+trust
+explainers
++25%
+learning + cro-   1,000 users	retention;
+Mobile mi
+78%→52%
+spaced	(6 months)
+
+repetition	DAU
+RoBERTa-
+
+large (ﬁne-	100K emails Acc 98.1% augmentation
+tuned),
+
+
+Explainability;
+trust boost
+
+
+
+Mobile
+accessibility &
+
+micro-learning SOTA accuracy;
+adversarial
+robustness
+
+
+drop;textra
+Sligh  perf
+latency
+
+
+
+engagement
+Long-term
+decay
+
+
+
+Very resource
+intensive
+
+
+
+
+Research Gaps
+
+1. Dynamic Generative Scenarios withAdaptivity
+
+Most existing training platforms rely on rule-based, static templates, which become predictable over While LLMs introduce variability and realism, very few systems successfully integrate:
+time.
+•	Generative diversity (varied attack styles)
+•	User performance–based difﬁculty progression
+Rein orce   ent-sty e adaptivity
+•	Thisf gapmlimits lpersonalized,   evolving   challenge   paths   needed   for   effective   skill
+development.
+
+
+2. Multi-Modal & Multi-Vector Training
+
+Even lthough ephishing ddetection research uses multi-modal signals (text, images, URLs, OCR,
+visua  spooﬁng), training systems mostly remain email-only.
+Missing elem nts inclu  e:
+•	SMS/smishing simulations •	Social media phishing
+•	Image-based and QR-code attacks
+•	This creates a mismatch between real-world attack diversity and training coverage.
+Attachment-level deception
+3. Explainability Built Into Learning Feedback
+
+Explainable AI (XAI) techniques such as SHAP, attention visualization, and .rationale generation are
+used in analyst tools, but rarely integrated into user-facing training feedback
+As a result, learners are told what is right or wrong, but not:
+
+
+•	Why an attack is deceptive •	Which red ﬂags matter most
+•	Lack of pedagogical explainability reduces knowledge transfer and long-term resilience.
+How veriﬁcation should be performed
+These gaps form the foundation of PhishNet’s objectives:fan integrated, generative, adaptive,
+explainable, privacy-aware, multi-modal training plat orm.
+
+
+
+
+
+2. Design & Methodology 2.1 Objectives
+1.	To Develop a Comprehensive and Immersive Gamiﬁed Cybersecurity Education Ecosystem 2.	To Implement an Adaptively Personalized Dynamic Scenario Generation Framework
+Leveraging Advanced AI Mechanisms
+
+3.	To Establish an Intelligent, Multi-Layered Explanation and Assessment Mechanism for
+Scenario-Driven Learning
+2.2 System Architecture — Block Diagram
+2.3 Step-by-Step Workﬂow
+WorkﬂowA — Session & Scenario Generation
+1.	Userrlogin / session start. Backend fetches user proﬁle, current ELO rating and recent 2.	Difﬁculty. mapping. ELO → difﬁculty level (1–5); apply streak adjustment and category
+histo y from User DB.
+weighting
+3.	Scenario parameters selected. Category (email/sms/image), attack vector, red-ﬂag count,
+personalization tokens.
+
+
+4.	LLM prompt construction. Backend builds prompt template (persona + constraints +
+JSON output schema) and calls LLM (Groq Llama).
+
+
+5.	Scenario generation. LLM returns scenario JSONt (sender, subject/body, links, attachments, 6.	UI renders scenario. Show formatted email/SMS, decision buttons, timer, and Digital
+red_ﬂags, correct_action). Backend validates and s ores scenario_id in session cache.
+Guardian access.
+
+Workﬂow B — Digital Guardian (RAG) Assistance
+1.	User query invokes DG. Query includes last N turns and current scenario context.
+
+2.	Query reformulation & embedding. Use LLM or local reformulator → embed with
+Sentence-BERT.
+
+
+3.	Semantic retrieval. Query ChromaDB for top-k relevant KB chunks (metadata ﬁlters:
+category, recency).
+
+
+4.	Rerank & build context. Cross-encoder reranking (if available); pick top chunks and
+construct prompt with citations.
+
+
+5.	LLM response. Request concise, pedagogical answer (hint/detailed/expert) with citations.
+Return to UI.
+
+
+
+
+Workﬂow C — Decision Evaluation & Feedback
+1.	User submits decision (+ optional justiﬁcation). Backend records time and response.
+2.	Correctness check. Compare user choice to scenario.correct_action. Determine base result
+(correct/close/incorrect).
+
+
+3.	Red-ﬂag analysis. Compare identiﬁed ﬂags in justiﬁcation vs scenario.red_ﬂags. Compute
+partial credit.
+
+
+4.	Scoring & ELO update. Compute ﬁnal_score using base_score, red_ﬂag_bonus,
+reasoning_quality factor and time_factor. Update ELO: Rating += K*(actual -
+expected).
+5.	ﬂagsrmatter, veriﬁcation steps, suggested practice items. Use LLM for natural wording but 6.	Persist stats & achievements. Update User DB and show progress, unlocked badges and
+Feedback generation. Compose structured feedback: decision result, missed ﬂags, why
+ensu e factual grounding via RAG.
+suggested next scenarios.
+
+
+
+Workﬂow D — Knowledge Base Management (one-time + continuous)
+1.	Curation. Collect documents (CISA, blogs, advisories, academic) and metadata. 2.	Chunking & cleaning. Split into ~512-token chunks with overlap, keep metadata.
+3.	Embeddingt & ingest. Generate embeddings (Sentence-BERT) and store into ChromaDB 4.	Monitoring & refresh. Schedule periodic reindexing for new threats and remove stale
+with metada a tags.
+entries.
+
+
+
+
+2.4 Module Interaction & Dataﬂows Major Modules & Interfaces
+•	Frontend (UI): Game scene rendering, Digital Guardian chat, progress dashboard —
+communicates via REST/WebSocket with backend.
+
+
+•	Game Controller (Backend): Orchestrates scenario lifecycle, difﬁculty mapping, result
+evaluation, and achievement logic.
+
+
+•	RAG Orchestrator: Handles query reformulation, embedding requests, vector DB retrieval,
+context construction, and LLM prompt orchestration.
+
+
+•	LLM Service: External provider (Groq Llama 3.3) for scenario & generative outputs. •	Embedding Service: Sentence-BERT model (local) to vectorize queries/doc chunks.
+•	Vector DB (ChromaDB): Stores KB embeddings and supports semantic search (top-k). •	User DB & Session Cache: SQLite for persistent user data; Redis for session state and
+temporary conversation history.
+
+
+
+Example Interactions sequence:
+
+1. UI → Game Controller: start_session(user_id)
+
+2.  Game Controller → User DB: fetch_proﬁle(user_id)
+
+3.  Game Controller → LLM Service: generate_scenario(prompt)
+4. UI ← Game Controller: render_scenario(scenario) 5. UI → RAG Orchestrator: DG_query(text + context) 6.  RAG → Embedding Service: get_embedding(query) 7. RAG → ChromaDB: semantic_search(embedding, ﬁlters)
+8. RAG → LLM Service: generate_grounded_response(prompt_with_context) 9. UI ← RAG: show_response(answer, sources)
+10. UI → Game Controller: submit_decision(choice, justiﬁcation)
+
+11. Game Controller → Evaluation Service: evaluate(choice, scenario) 12. Evaluation → User DB: update_proﬁle(stats, ELO)
+13. UI ← Game Controller: show_feedback(score, explanations, new_rating)
+
+
+
+2.5 Implementation & Design Choices
+
+• LLM selection: Groq Llama 3.3 70B (or equivalent) chosen for high-quality scenario generation
+and low latency; prompt templates include explicit safety and factuality constraints.
+
+
+• RAG pipeline:All DG responsestmust include source chunks (citations) to ensure factual
+grounding and educational integri y.
+• Personalization: ELO + streak adjustments form fast converging difﬁculty mapping; long-term
+personalization uses category-wise proﬁciency stats.
+
+
+• Privacy: By default, store only non-sensitive aggregate metrics; optional advanced telemetry is
+opt-in and processed on device where feasible.
+
+
+• Explainability: Feedback contains three levels — Quick Tip, Educated Explanation, and Deep
+Dive — to suit novice→expert learners.
+
+
+• Scalability: Use caching for repeated RAG queries and scenario templates; vector DB indexed
+for low-latency retrieval.
+
+
+
+2.6 Success Criteria & Evaluation Plan
+
+•	System metrics: Scenario gen time < 3s; DG response < 2s; retrieval latency < 0.5s.
+•	Learning metrics: Pre/post accuracy improvement > 20%; retention test >70% after one
+week.
+
+
+•	Engagement metrics: DAU > 60% within pilot cohort; completion rate > 75% for 10+
+scenarios.
+
+
+•	Qualitative: User satisfaction > 4.0/5 for scenario realism and DG helpfulness.
+

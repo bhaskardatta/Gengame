@@ -1,7 +1,5 @@
 "use client";
 
-import { Html } from "@react-three/drei";
-import VirtualDesktop from "../os/VirtualDesktop";
 import { useGameStore } from "@/stores/gameStore";
 
 export default function Computer(props: any) {
@@ -25,28 +23,20 @@ export default function Computer(props: any) {
                 <meshStandardMaterial color="#080808" roughness={0.2} metalness={0.8} />
             </mesh>
 
-            {/* Screen (Interactive HTML) */}
+            {/* Screen Surface */}
             <mesh position={[0, 0.6, 0.051]}>
                 <planeGeometry args={[1.25, 0.75]} />
-                <meshStandardMaterial color="#000000" />
-                {isSitting && (
-                    <Html
-                        transform
-                        wrapperClass="htmlScreen"
-                        distanceFactor={1.17}
-                        position={[0, 0, 0.01]}
-                        style={{
-                            width: "1024px",
-                            height: "768px",
-                            background: "black",
-                            overflow: "hidden",
-                            borderRadius: "4px"
-                        }}
-                    >
-                        <VirtualDesktop />
-                    </Html>
-                )}
+                {/* When sitting, the screen glows blue (OS is active), otherwise it's black */}
+                <meshStandardMaterial
+                    color={isSitting ? "#001d35" : "#050505"}
+                    emissive={isSitting ? "#0066cc" : "#000000"}
+                    emissiveIntensity={isSitting ? 0.5 : 0}
+                    roughness={0.2}
+                />
             </mesh>
+
+            {/* REMOVED <Html> COMPONENT TO PREVENT GLITCHES. 
+                WE USE THE 2D OVERLAY IN page.tsx INSTEAD. */}
         </group>
     );
 }
