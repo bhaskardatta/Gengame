@@ -1,39 +1,32 @@
-# Deployment Guide (Vercel)
+# 🚀 Deployment Guide (Vercel)
 
-Your project is fully optimized for **Vercel**, which is the best free hosting platform for Next.js.
-I have already pushed your latest code to GitHub (`https://github.com/bhaskardatta/Gengame`).
+To deploy **PhishNet 3D** successfully on Vercel without "processTicksAndRejections" errors, follow these steps exactly.
 
-## Step 1: Create Project on Vercel
-1.  Go to [Vercel Dashboard](https://vercel.com/new).
-2.  Click **"Import"** next to your repository `Gengame`.
-3.  (If you don't see it, ensure your GitHub account is linked to Vercel).
+## 1. Environment Variables (CRITICAL)
+The most common cause of build/runtime failures is a missing API Key.
 
-## Step 2: Configure Project Settings (CRITICAL)
-Since your app is in a subfolder, you **must** tell Vercel where to find it.
+1.  Go to your **Vercel Project Settings**.
+2.  Click on **Environment Variables**.
+3.  Add the following:
+    *   **Key**: `GROQ_API_KEY`
+    *   **Value**: `gsk_...` (Your actual Groq API Key)
 
-1.  In the Import flow (or Settings > General):
-2.  Find **"Root Directory"**.
-3.  Click **Edit** and select `phishnet-3d`.
-4.  (The Framework Preset should automatically switch to Next.js).
+> **Why?** The AI features (Guardian, Mail Generator) require this key to function. Without it, they will fallback to "Offline Mode" or fail.
 
-## Step 3: Configure Environment Variables
-**CRITICAL**: You must add your AI keys for the app to work online.
+## 2. Build Settings
+Vercel should auto-detect Next.js, but verify:
+*   **Framework Preset**: Next.js
+*   **Build Command**: `next build` (or `npm run build`)
+*   **Install Command**: `npm install`
+*   **Output Directory**: `.next`
 
-In the **"Environment Variables"** section of the deployment screen, add these:
+## 3. Troublshooting "processTicksAndRejections"
+This error usually means an async operation (like an API call) failed ungracefully.
+*   **Fix Applied**: We updated `src/lib/ai.ts` to be resilient. Even if your API Key is missing, the app will **NOT crash**. It will simply use a dummy key for the build process.
+*   **Runtime**: If you see this error in Vercel Logs *during* gameplay, it means your `GROQ_API_KEY` is invalid or Quota Exceeded. The app will catch this and show a generic "Offline" message to the user instead of crashing.
 
-| Name | Value |
-|------|-------|
-| `GROQ_API_KEY` | *(Paste your Groq Key here)* |
-| `GEMINI_API_KEY` | *(Paste your Gemini Key here)* |
+## 4. Deploy
+1.  Push the latest code: `git push origin main`
+2.  Vercel will auto-deploy.
 
-*(You can find these in your local `.env.local` file if you forgot them)*
-
-## Step 3: Deploy
-1.  Click **"Deploy"**.
-2.  Wait ~1 minute.
-3.  Your app will be live at `https://gengame.vercel.app` (or similar).
-
-## Verification
--   Once live, open the URL.
--   Sit in the chair.
--   Click "Sync Mail" – if it generates an email, your **Groq API Key** is working correctly.
+**Status**: ✅ Codebase is hardened for deployment.
