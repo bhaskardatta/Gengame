@@ -45,6 +45,12 @@ export default function Player() {
                 case 'KeyS': setMove(m => ({ ...m, backward: true })); break;
                 case 'KeyA': setMove(m => ({ ...m, left: true })); break;
                 case 'KeyD': setMove(m => ({ ...m, right: true })); break;
+                case 'Escape':
+                    // Force stand up if sitting
+                    if (useGameStore.getState().isSitting) {
+                        useGameStore.getState().setIsSitting(false);
+                    }
+                    break;
             }
         };
         const handleKeyUp = (e: KeyboardEvent) => {

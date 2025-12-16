@@ -76,19 +76,30 @@ export default function DashboardApp() {
                                 Complete training scenarios to generate data.
                             </div>
                         ) : (
-                            matchHistory.slice(-15).map((point, i) => {
-                                const heightPercent = ((point.rating - minRating) / (maxRating - minRating)) * 100;
+                            // Fill empty slots if history is short to keep spacing consistent
+                            [...Array(Math.max(0, 10 - matchHistory.length)).fill(null), ...matchHistory.slice(-10)].map((point, i) => {
+                                if (!point) return <div key={`empty-${i}`} className="flex-1 opacity-0"></div>;
+
+                                // Calculate percentage with buffer
+                                const range = maxRating - minRating;
+                                const safeRange = range === 0 ? 100 : range; // Avoid divide by zero
+                                const relativeVal = point.rating - minRating;
+                                const heightPercent = (relativeVal / safeRange) * 100;
+
                                 return (
                                     <div key={i} className="flex flex-col items-center gap-2 flex-1 group">
                                         <div
                                             className={`w-full max-w-[40px] rounded-t-lg transition-all hover:opacity-80 relative ${point.result === 'Win' ? 'bg-emerald-500' : 'bg-red-500'}`}
-                                            style={{ height: `${Math.max(5, heightPercent)}%` }}
+                                            // Ensure at least 15% height for visibility even if at minRating
+                                            style={{ height: `${Math.max(15, heightPercent)}%` }}
                                         >
                                             <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
                                                 {point.rating} ELO
                                             </div>
                                         </div>
-                                        <span className="text-[10px] text-slate-400 font-mono rotate-45 mt-2 origin-left">{point.date}</span>
+                                        <span className="text-[10px] text-slate-400 font-mono rotate-45 mt-2 origin-left whitespace-nowrap overflow-visible">
+                                            {point.date.split(' ')[0]}
+                                        </span>
                                     </div>
                                 )
                             })
