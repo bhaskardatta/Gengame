@@ -3,6 +3,7 @@
 import { Mail, RefreshCw, AlertTriangle, Trash2, Reply, CheckCircle, XCircle } from "lucide-react";
 import { useGameStore } from "@/stores/gameStore";
 import { useState, useEffect } from "react";
+import FeedbackModal from "../game/FeedbackModal";
 
 // Email Interface
 interface Email {
@@ -19,11 +20,12 @@ interface Email {
 const TOPICS = ["Income Tax", "Job Offer", "Lottery", "Bank KYC", "Amazon Delivery", "Netflix", "Traffic Fine", "Diwali Bonus"];
 
 export default function MailApp() {
-    const { incrementScore, setCurrentObjective, score } = useGameStore();
+    const { incrementScore, setCurrentObjective, score, updateElo } = useGameStore();
     const [emails, setEmails] = useState<Email[]>([]);
     const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
     const [loading, setLoading] = useState(false);
-    const [feedback, setFeedback] = useState<{ msg: string, correct: boolean } | null>(null);
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [feedbackData, setFeedbackData] = useState<any>(null);
 
     const getDifficulty = () => {
         if (score > 1500) return "Expert";
@@ -71,8 +73,7 @@ export default function MailApp() {
 
         const isCorrect = (markedAsPhishing && selectedEmail.isPhishing) || (!markedAsPhishing && !selectedEmail.isPhishing);
 
-        // If we have a pre-generated explanation, we can display it locally OR we can ask AI to refine it based on user choice.
-        // For better interactivity, let's hit the feedback endpoint which uses our new logic.
+        // Fetch AI Explanation
         const res = await fetch('/api/genai', {
             method: 'POST',
             body: JSON.stringify({
@@ -82,8 +83,18 @@ export default function MailApp() {
             })
         });
         const explanation = await res.json();
+        const redFlags = selectedEmail.isPhishing ? ["Suspicious Sender", "Urgency", "Link Mismatch"] : []; // In real app, AI should return this
 
-        setFeedback({ msg: explanation, correct: isCorrect });
+        // Update ELO
+        const eloResult = updateElo(selectedEmail.difficulty as any, isCorrect);
+
+        setFeedbackData({
+            isCorrect,
+            message: explanation,
+            eloChange: eloResult,
+            redFlags: isCorrect && markedAsPhishing ? redFlags : []
+        });
+        setShowFeedback(true);
 
         if (isCorrect) {
             incrementScore(100);
@@ -100,7 +111,7 @@ export default function MailApp() {
             setEmails(prev => prev.filter(e => e.id !== selectedEmail.id));
             setSelectedEmail(null);
         }
-        setFeedback(null);
+        setShowFeedback(false);
     };
 
     return (
@@ -115,7 +126,7 @@ export default function MailApp() {
                 </div>
                 <div className="overflow-y-auto flex-1">
                     {emails.map(e => (
-                        <div key={e.id} onClick={() => { setSelectedEmail(e); setFeedback(null); }} className={`p-4 border-b cursor-pointer hover:bg-blue-50 transition-colors ${selectedEmail?.id === e.id ? 'bg-blue-100 border-l-4 border-blue-600' : 'border-l-4 border-transparent'}`}>
+                        <div key={e.id} onClick={() => { setSelectedEmail(e); setShowFeedback(false); }} className={`p-4 border-b cursor-pointer hover:bg-blue-50 transition-colors ${selectedEmail?.id === e.id ? 'bg-blue-100 border-l-4 border-blue-600' : 'border-l-4 border-transparent'}`}>
                             <div className="font-bold truncate text-slate-900">{e.sender}</div>
                             <div className="text-sm truncate text-slate-600">{e.subject}</div>
                             {/* Educational Badge */}
@@ -133,15 +144,15 @@ export default function MailApp() {
                 {selectedEmail ? (
                     <>
                         {/* Feedback Overlay */}
-                        {feedback && (
-                            <div className="absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center p-8 text-center animate-in fade-in backdrop-blur-sm">
-                                {feedback.correct ? <CheckCircle size={64} className="text-green-500 mb-4" /> : <XCircle size={64} className="text-red-500 mb-4" />}
-                                <h2 className="text-2xl font-bold mb-2 text-slate-900">{feedback.correct ? "Excellent Analysis!" : "Security Failure"}</h2>
-                                <p className="text-lg text-slate-600 mb-8 max-w-lg leading-relaxed">{feedback.msg}</p>
-                                <button onClick={handleNext} className="bg-slate-900 text-white px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform">
-                                    Continue &rarr;
-                                </button>
-                            </div>
+                        {showFeedback && feedbackData && (
+                            <FeedbackModal
+                                isOpen={showFeedback}
+                                isCorrect={feedbackData.isCorrect}
+                                message={feedbackData.message}
+                                eloChange={feedbackData.eloChange}
+                                redFlags={feedbackData.redFlags}
+                                onClose={handleNext}
+                            />
                         )}
 
                         <div className="p-8 flex-1 overflow-auto bg-white m-6 rounded-lg shadow-sm border border-slate-200">

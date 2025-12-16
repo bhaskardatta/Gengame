@@ -3,7 +3,7 @@ import { create } from 'zustand';
 export interface WindowState {
     id: string;
     title: string;
-    type: 'mail' | 'browser' | 'terminal' | 'settings' | 'messages' | 'guardian';
+    type: 'mail' | 'browser' | 'terminal' | 'settings' | 'messages' | 'guardian' | 'dashboard';
     isOpen: boolean;
     isMinimized: boolean;
     zIndex: number;

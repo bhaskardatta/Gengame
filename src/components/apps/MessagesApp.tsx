@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Send, Video, Info, Image as ImageIcon, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import { useGameStore } from "@/stores/gameStore";
+import FeedbackModal from "../game/FeedbackModal";
 
 // Types
 interface Message {
@@ -25,7 +26,7 @@ interface Conversation {
 const SMS_TOPICS = ["UPI Cashback", "E-Challan", "Job Offer", "Bank Block", "Electricity Bill", "Friend in trouble", "5G Update"];
 
 export default function MessagesApp() {
-    const { incrementScore, setCurrentObjective } = useGameStore();
+    const { incrementScore, setCurrentObjective, updateElo } = useGameStore();
     const [conversations, setConversations] = useState<Conversation[]>([
         {
             id: 1,
@@ -50,7 +51,8 @@ export default function MessagesApp() {
     const [activeConvId, setActiveConvId] = useState<number>(1);
     const [inputText, setInputText] = useState("");
     const [loading, setLoading] = useState(false);
-    const [feedback, setFeedback] = useState<{ msg: string, correct: boolean } | null>(null);
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [feedbackData, setFeedbackData] = useState<any>(null);
 
     const getRandomTopic = () => SMS_TOPICS[Math.floor(Math.random() * SMS_TOPICS.length)] + " " + Date.now();
 
@@ -118,8 +120,17 @@ export default function MessagesApp() {
             })
         });
         const explanation = await res.json();
+        const redFlags = isActuallyPhishing ? ["Unverified Number", "Urgent Request", "Suspicious link"] : [];
 
-        setFeedback({ msg: explanation, correct: isCorrect });
+        const eloResult = updateElo('Intermediate', isCorrect);
+
+        setFeedbackData({
+            isCorrect,
+            message: explanation,
+            eloChange: eloResult,
+            redFlags: isCorrect && markedAsPhishing ? redFlags : []
+        });
+        setShowFeedback(true);
 
         if (isCorrect) {
             incrementScore(100);
@@ -167,29 +178,28 @@ export default function MessagesApp() {
     const deleteConversation = (id: number) => {
         setConversations(prev => prev.filter(c => c.id !== id));
         if (activeConvId === id) setActiveConvId(conversations[0]?.id || 0);
-        setFeedback(null);
+        setShowFeedback(false);
     };
 
     return (
         <div className="flex h-full bg-white font-sans text-sm relative">
 
             {/* Feedback Overlay */}
-            {feedback && (
-                <div className="absolute inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-8 text-center animate-in fade-in backdrop-blur-sm">
-                    {feedback.correct ? <CheckCircle size={64} className="text-green-500 mb-4" /> : <XCircle size={64} className="text-orange-500 mb-4" />}
-                    <h2 className="text-2xl font-bold mb-2 text-black">{feedback.correct ? "Great Job!" : "Careful!"}</h2>
-                    <p className="text-lg text-gray-600 mb-6 max-w-md">{feedback.msg}</p>
-                    <button onClick={() => {
-                        // If correct, remove the convo as it's "dealt with"
-                        if (feedback.correct && activeConvId) {
+            {showFeedback && feedbackData && (
+                <FeedbackModal
+                    isOpen={showFeedback}
+                    isCorrect={feedbackData.isCorrect}
+                    message={feedbackData.message}
+                    eloChange={feedbackData.eloChange}
+                    redFlags={feedbackData.redFlags}
+                    onClose={() => {
+                        if (feedbackData.isCorrect && activeConvId) {
                             deleteConversation(activeConvId);
                         } else {
-                            setFeedback(null); // Just close on wrong answer to let them try again or see
+                            setShowFeedback(false);
                         }
-                    }} className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium shadow-lg hover:bg-blue-700 transition-all">
-                        {feedback.correct ? "Next Message" : "Try Again"}
-                    </button>
-                </div>
+                    }}
+                />
             )}
 
             {/* Sidebar */}

@@ -4,13 +4,14 @@ import { useOSStore } from "@/stores/osStore";
 import { useGameStore } from "@/stores/gameStore";
 import { useEffect, useState } from "react";
 import WindowFrame from "./WindowFrame";
-import { Mail, Globe, Terminal, MessageCircle, Wifi, Volume2, Battery, Search, Power, ChevronUp, ShieldCheck } from "lucide-react";
+import { Mail, Globe, Terminal, MessageCircle, Wifi, Volume2, Battery, Search, Power, ChevronUp, ShieldCheck, TrendingUp } from "lucide-react";
 
 import MailApp from "../apps/MailApp";
 import BrowserApp from "../apps/BrowserApp";
 import TerminalApp from "../apps/TerminalApp";
 import MessagesApp from "../apps/MessagesApp";
 import GuardianApp from "../apps/GuardianApp";
+import DashboardApp from "../apps/DashboardApp";
 
 export default function VirtualDesktop() {
     const { windows, openWindow, toggleStartMenu, isStartMenuOpen } = useOSStore();
@@ -43,6 +44,7 @@ export default function VirtualDesktop() {
                 <DesktopShortcut icon={<Terminal className="text-gray-700 fill-black" size={32} />} label="Terminal" onClick={() => openWindow('terminal')} />
                 <DesktopShortcut icon={<MessageCircle className="text-green-500 fill-green-500" size={32} />} label="Teams" onClick={() => openWindow('messages')} />
                 <DesktopShortcut icon={<ShieldCheck className="text-purple-500 fill-purple-900" size={32} />} label="Guardian" onClick={() => openWindow('guardian')} />
+                <DesktopShortcut icon={<TrendingUp className="text-blue-600 fill-blue-900" size={32} />} label="Progress" onClick={() => openWindow('dashboard')} />
             </div>
 
             {/* 3. OBJECTIVE HUD (Game Overlay) */}
@@ -61,6 +63,7 @@ export default function VirtualDesktop() {
                             {window.type === 'terminal' && <TerminalApp />}
                             {window.type === 'messages' && <MessagesApp />}
                             {window.type === 'guardian' && <GuardianApp />}
+                            {window.type === 'dashboard' && <DashboardApp />}
                         </WindowFrame>
                     </div>
                 ))}
@@ -141,6 +144,7 @@ export default function VirtualDesktop() {
                             <StartMenuIcon icon={<Globe className="text-emerald-500" size={24} />} label="Edge" onClick={() => openWindow('browser')} />
                             <StartMenuIcon icon={<Terminal className="text-gray-800" size={24} />} label="Term" onClick={() => openWindow('terminal')} />
                             <StartMenuIcon icon={<MessageCircle className="text-purple-500" size={24} />} label="Teams" onClick={() => openWindow('messages')} />
+                            <StartMenuIcon icon={<TrendingUp className="text-blue-600" size={24} />} label="Progress" onClick={() => openWindow('dashboard')} />
                         </div>
                     </div>
 
