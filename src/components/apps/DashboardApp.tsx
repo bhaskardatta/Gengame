@@ -63,47 +63,104 @@ export default function DashboardApp() {
                         Performance Trajectory (ELO)
                     </h3>
 
-                    <div className="h-64 flex items-end justify-between gap-2 px-4 relative">
-                        {/* Y-Axis Lines */}
-                        <div className="absolute inset-0 flex flex-col justify-between -z-10 text-xs text-slate-300 pointer-events-none">
-                            <div className="border-t border-dashed border-slate-200 w-full pt-1 pl-1">{Math.round(maxRating)}</div>
-                            <div className="border-t border-dashed border-slate-200 w-full pt-1 pl-1">{Math.round((maxRating + minRating) / 2)}</div>
-                            <div className="border-t border-dashed border-slate-200 w-full pt-1 pl-1">{Math.round(minRating)}</div>
-                        </div>
-
-                        {matchHistory.length === 0 ? (
-                            <div className="w-full h-full flex items-center justify-center text-slate-400 italic">
-                                Complete training scenarios to generate data.
+                    <div className="h-64 w-full relative">
+                        {matchHistory.length < 2 && eloRating === 1000 ? (
+                            <div className="w-full h-full flex items-center justify-center text-slate-400 italic bg-slate-50 rounded-lg border border-dashed border-slate-200">
+                                Complete at least 2 training scenarios to generate trajectory.
                             </div>
                         ) : (
-                            // Fill empty slots if history is short to keep spacing consistent
-                            [...Array(Math.max(0, 10 - matchHistory.length)).fill(null), ...matchHistory.slice(-10)].map((point, i) => {
-                                if (!point) return <div key={`empty-${i}`} className="flex-1 opacity-0"></div>;
+                            <div className="w-full h-full relative">
+                                {/* SVG Chart */}
+                                <svg className="w-full h-full overflow-visible">
+                                    <defs>
+                                        <linearGradient id="gradientLine" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.2" />
+                                            <stop offset="100%" stopColor="#4f46e5" stopOpacity="0" />
+                                        </linearGradient>
+                                    </defs>
 
-                                // Calculate percentage with buffer
-                                const range = maxRating - minRating;
-                                const safeRange = range === 0 ? 100 : range; // Avoid divide by zero
-                                const relativeVal = point.rating - minRating;
-                                const heightPercent = (relativeVal / safeRange) * 100;
+                                    {/* Grid Lines (Background) */}
+                                    <line x1="0" y1="0" x2="100%" y2="0" stroke="#e2e8f0" strokeDasharray="4 4" />
+                                    <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#e2e8f0" strokeDasharray="4 4" />
+                                    <line x1="0" y1="100%" x2="100%" y2="100%" stroke="#e2e8f0" strokeDasharray="4 4" />
 
-                                return (
-                                    <div key={i} className="flex flex-col items-center gap-2 flex-1 group">
-                                        <div
-                                            className={`w-full max-w-[40px] rounded-t-lg transition-all hover:opacity-80 relative ${point.result === 'Win' ? 'bg-emerald-500' : 'bg-red-500'}`}
-                                            // Ensure at least 15% height for visibility even if at minRating
-                                            style={{ height: `${Math.max(15, heightPercent)}%` }}
-                                        >
-                                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-                                                {point.rating} ELO
-                                            </div>
-                                        </div>
-                                        <span className="text-[10px] text-slate-400 font-mono rotate-45 mt-2 origin-left whitespace-nowrap overflow-visible">
-                                            {point.date.split(' ')[0]}
-                                        </span>
-                                    </div>
-                                )
-                            })
+                                    {/* The Line Path */}
+                                    {(() => {
+                                        // 1. Prepare Data Points
+                                        // Include initial rating (1000) if history is short, or just use history
+                                        const dataPoints = matchHistory.length > 0
+                                            ? [...matchHistory]
+                                            : [{ rating: 1000, date: 'Start', result: 'Win' }];
+
+                                        // Limit to last 10 for readability
+                                        const visibleData = dataPoints.slice(-10);
+
+                                        // 2. Determine Scale
+                                        const ratings = visibleData.map(d => d.rating);
+                                        const min = Math.min(...ratings, 800) - 50;
+                                        const max = Math.max(...ratings, 1200) + 50;
+                                        const range = max - min;
+
+                                        // 3. Map to Coordinates (percentage)
+                                        const points = visibleData.map((d, i) => {
+                                            const x = (i / (visibleData.length - 1 || 1)) * 100;
+                                            const y = 100 - ((d.rating - min) / range) * 100;
+                                            return { x, y, ...d };
+                                        });
+
+                                        // 4. Generate SVG Path Command
+                                        const pathD = points.map((p, i) =>
+                                            `${i === 0 ? 'M' : 'L'} ${p.x}% ${p.y}%`
+                                        ).join(' ');
+
+                                        return (
+                                            <>
+                                                {/* Area Fill */}
+                                                <path
+                                                    d={`${pathD} L ${points[points.length - 1].x}% 100% L 0 100% Z`}
+                                                    fill="url(#gradientLine)"
+                                                    stroke="none"
+                                                />
+                                                {/* Stroke Line */}
+                                                <path
+                                                    d={pathD}
+                                                    fill="none"
+                                                    stroke="#4f46e5"
+                                                    strokeWidth="3"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    className="drop-shadow-sm"
+                                                />
+                                                {/* Data Points */}
+                                                {points.map((p, i) => (
+                                                    <g key={i}>
+                                                        <circle
+                                                            cx={`${p.x}%`} cy={`${p.y}%`} r="6"
+                                                            className={`fill-white stroke-2 ${p.result === 'Win' ? 'stroke-emerald-500' : 'stroke-red-500'} hover:r-8 transition-all cursor-pointer`}
+                                                        />
+                                                        {/* Tooltip on Hover (CSS group needed, simplest is always-on text for now or simple overlay) */}
+                                                        <text
+                                                            x={`${p.x}%`} y={`${p.y}%`} dy="-12"
+                                                            textAnchor="middle"
+                                                            className="text-[10px] fill-slate-500 font-bold opacity-0 hover:opacity-100 transition-opacity"
+                                                        >
+                                                            {p.rating}
+                                                        </text>
+                                                    </g>
+                                                ))}
+                                            </>
+                                        );
+                                    })()}
+                                </svg>
+                            </div>
                         )}
+
+                        {/* Reference Labels (Absolute Overlay) */}
+                        <div className="absolute inset-y-0 left-0 -ml-8 flex flex-col justify-between text-[10px] text-slate-400 font-mono py-1">
+                            <span>High</span>
+                            <span>Avg</span>
+                            <span>Low</span>
+                        </div>
                     </div>
                 </div>
 
