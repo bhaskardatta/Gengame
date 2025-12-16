@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "PhishNet 3D | Cyber Security Simulator",
-  description: "An immersive First-Person Simulator for Cyber Security training.",
+export const metadata = {
+  title: "PhishNet 3D - Cyber Defense Simulator",
+  description: "Advanced cybersecurity training simulation.",
 };
 
 export default function RootLayout({
